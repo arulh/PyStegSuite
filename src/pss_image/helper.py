@@ -2,10 +2,10 @@ import random
 
 def encode_pixel(pixel: tuple, key: int) -> tuple:
     """
-    Encodes the key into the lower order bits of the pixel (r, g, b, a).
+    Encodes the key into the lower order bits of the pixels RGB values.
 
-    Returns:
-        Encoded pixel as tuple.
+    Parameters: 
+    Returns: Encoded pixel as tuple.
     """
 
     key = key%64
