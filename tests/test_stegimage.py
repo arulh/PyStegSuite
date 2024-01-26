@@ -10,7 +10,7 @@ def test_helper() -> None:
     Tests all functions contained in helper.py
     """
 
-    test_count = 100
+    test_count = 5000
 
     for x in range(test_count):
         test_key = generate_key()

@@ -37,22 +37,14 @@ def is_encoded_pixel(pixel: tuple, key: int) -> bool:
     # extract RGB values from potential encoded pixel
     r, g, b = pixel[0], pixel[1], pixel[2]
 
-    r = str(bin((r & 0b1111111100) | int(binary_key[0:2], 2)))
-    g = str((g & 0b1111111100) | int(binary_key[2:4], 2))
-    b = str((b & 0b1111111100) | int(binary_key[4:6], 2))
+    r_bin = str(bin(r)[2:]).zfill(8)[6:]
+    g_bin = str(bin(g)[2:]).zfill(8)[6:]
+    b_bin = str(bin(b)[2:]).zfill(8)[6:]
 
-    print(binary_key[0:2])
-    print(r)
-
-    return binary_key[0:2] == r and binary_key[2:4] == g and binary_key[4:6] == b
+    return binary_key[0:2] == r_bin and binary_key[2:4] == g_bin and binary_key[4:6] == b_bin
 
 def generate_key() -> int:
     """
     Generates 4 digit key.
     """
     return random.randint(1000, 9999)
-
-
-pixel = (234, 50, 168, 255)
-new_pixel = encode_pixel(pixel, 8888)
-is_encoded_pixel(new_pixel, 8888)
