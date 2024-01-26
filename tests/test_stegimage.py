@@ -3,7 +3,7 @@ sys.path.append('../src/')
 
 import random
 import timeit
-from pss_image.helper import encode_pixel, is_encoded_pixel, generate_key
+from stegimage.helper import encode_pixel, is_encoded_pixel, generate_key
 
 def test_helper() -> None:
     """

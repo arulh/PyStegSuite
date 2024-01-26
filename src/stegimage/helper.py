@@ -41,19 +41,18 @@ def is_encoded_pixel(pixel: tuple, key: int) -> bool:
     g = str((g & 0b1111111100) | int(binary_key[2:4], 2))
     b = str((b & 0b1111111100) | int(binary_key[4:6], 2))
 
-    # print(binary_key[0:2])
-    # print(r)
+    print(binary_key[0:2])
+    print(r)
 
     return binary_key[0:2] == r and binary_key[2:4] == g and binary_key[4:6] == b
 
 def generate_key() -> int:
     """
-    Returns:
-        Generated 4 digit key.
+    Generates 4 digit key.
     """
     return random.randint(1000, 9999)
 
 
-# pixel = (234, 50, 168, 255)
-# new_pixel = encode_pixel(pixel, 8888)
-# is_encoded_pixel(new_pixel, 8888)
+pixel = (234, 50, 168, 255)
+new_pixel = encode_pixel(pixel, 8888)
+is_encoded_pixel(new_pixel, 8888)
