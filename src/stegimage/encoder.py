@@ -11,6 +11,14 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(
     img = Image.open(img_path).convert("RGBA")
     img_data = np.array(img)
 
+    # check valid arguments
+    if (text_size > img_data.shape[1]):
+        raise ValueError("TEXT SIZE MUST FIT ON IMAGE")
+    elif (text_coords[0] > img_data.shape[0] or text_coords[1] > img_data.shape[1] or text_coords[0] < 0 or text_coords[1] < 0):
+        raise ValueError("TEXT COORDINATES NEED TO BE IN IMAGE")
+    elif (encoded_text.isspace()):
+        raise ValueError("ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER")
+
     fnt = ImageFont.load_default(text_size)
     text_length = int(fnt.getlength(encoded_text))
 
