@@ -1,9 +1,27 @@
 import sys
-sys.path.append('../src/')
+sys.path.append('../src/stegimage')
 
+import pytest
 import random
-import timeit
-from stegimage.helper import encode_pixel, is_encoded_pixel, generate_key
+import encoder
+# import stegimage.decoder
+from helper import generate_key, encode_pixel, is_encoded_pixel
+
+def test_encode_stencil() -> None:
+    """
+    Tests the assertions of encode_stencil.
+    """
+
+    try:
+        # beach.png is 1024x1024 pixels
+        encoder.encode_stencil("resources/beach.png", "Hello World", text_size=1024)
+    except:
+        pytest.fail("UNEXPECTED ERROR")
+
+    with pytest.raises(ValueError) as execinfo:
+        encoder.encode_stencil("resources/beach.png", "Hello World", text_size=1025)
+    assert str(execinfo.value) == "TEXT SIZE MUST FIT ON IMAGE"
+
 
 def test_helper() -> None:
     """
