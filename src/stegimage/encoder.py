@@ -1,9 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
-import numpy as np
 
 from helper import encode_pixel, generate_key
 
-def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(50, 50)) -> tuple:
+def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(50, 50)) -> tuple | ValueError:
     """
     Encodes the text into the image using a stencil approach.
 
@@ -13,6 +12,8 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(
     
     img = Image.open(img_path).convert("RGBA")
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+    fnt = ImageFont.load_default(text_size)
+    text_length = int(fnt.getlength(encoded_text))
 
     # check valid arguments
     if (text_size > height):
@@ -21,10 +22,7 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(
         raise ValueError("TEXT COORDINATES NEED TO BE IN IMAGE")
     elif (encoded_text.isspace()):
         raise ValueError("ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER")
-
-    fnt = ImageFont.load_default(text_size)
-    text_length = int(fnt.getlength(encoded_text))
-
+    
     text_img = Image.new("RGB", (text_length, text_size), color="white")
     
     draw = ImageDraw.Draw(text_img)
@@ -34,8 +32,9 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=75, text_coords=(
     key = generate_key()
 
     for y in range(text_size):
-        for x in range(text_length):
+        for x in range(min(text_length, length)):
             if (text_img.getpixel((x, y)) == (0, 255, 0)):
-                img.putpixel((x, y), encode_pixel(img.getpixel((x, y)), key))
+                adjusted_coords = (x+text_coords[0], y+text_coords[1])
+                img.putpixel(adjusted_coords, encode_pixel(img.getpixel(adjusted_coords), key))
 
     return img, key
