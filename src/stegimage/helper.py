@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import random
 
 def encode_pixel(pixel: tuple, key: int) -> tuple:
@@ -43,6 +43,19 @@ def is_encoded_pixel(pixel: tuple, key: int) -> bool:
     b_bin = str(bin(b)[2:]).zfill(8)[6:]
 
     return binary_key[0:2] == r_bin and binary_key[2:4] == g_bin and binary_key[4:6] == b_bin
+
+def make_text_img(fnt : ImageFont.ImageFont, text: str, text_size: int) -> Image.Image:
+    """
+    Generates image of text with the exact dimensions required by given font.
+    """
+
+    text_length = int(fnt.getlength(text))
+
+    text_img = Image.new("RGB", (text_length, text_size), color="white")
+    draw = ImageDraw.Draw(text_img)
+    draw.text((0, 0), text=text, fill=(0, 255, 0), font=fnt)
+
+    return text_img
 
 def generate_key() -> int:
     """
