@@ -10,7 +10,7 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(
         Image object, key
     """
     
-    img = Image.open(img_path).convert("RGBA")
+    img = Image.open(img_path).convert("RGB")
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
     fnt = ImageFont.load_default(text_size)
     text_length = int(fnt.getlength(encoded_text))

@@ -16,6 +16,6 @@ def decode_stencil(img_path: str, key: int) -> Image.Image:
         for x in range(length):
             if (is_encoded_pixel(img.getpixel((x, y)), key)):
                 # sets decrypted pixels to green
-                img.putpixel((x, y), (0, 255, 0, 255))
+                img.putpixel((x, y), (0, 255, 0))
 
     return img

@@ -22,7 +22,7 @@ def encode_pixel(pixel: tuple, key: int) -> tuple:
     encoded_g = (g & 0b1111111100) | int(binary_key[2:4], 2)
     encoded_b = (b & 0b1111111100) | int(binary_key[4:6], 2)
 
-    return (encoded_r, encoded_g, encoded_b, 255)
+    return (encoded_r, encoded_g, encoded_b)
 
 def is_encoded_pixel(pixel: tuple, key: int) -> bool:
     """
