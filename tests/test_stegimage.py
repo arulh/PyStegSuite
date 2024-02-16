@@ -6,7 +6,7 @@ import pytest
 import random
 import encoder
 # import stegimage.decoder
-from helper import generate_key, encode_pixel, is_encoded_pixel
+from helper import generate_key, encode_pixel, is_encoded_pixel, make_text_img
 
 def test_encode_stencil_exceptions() -> None:
     """
@@ -47,6 +47,20 @@ def test_encode_stencil_exceptions() -> None:
     with pytest.raises(ValueError) as execinfo:
         encoder.encode_stencil(rel_path, "\t\n")
     assert str(execinfo.value) == "ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER"
+
+def test_helper_make_text_img() -> None:
+    """
+    Tests the proper dimensions of text image.
+    """
+    text_size = 50
+    fnt = ImageFont.load_default(text_size)
+
+    text_im1 = make_text_img(fnt, "Hello World", text_size)
+
+    length, height = text_im1.getbbox()[2]-text_im1.getbbox()[0], text_im1.getbbox()[3]-text_im1.getbbox()[1]
+
+    assert height == text_size
+    assert length == 268 # specific to font
 
 def test_helper_encode_pixel() -> None:
     """
