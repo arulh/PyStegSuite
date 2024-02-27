@@ -8,7 +8,7 @@ def decode_stencil(img_path: str, key: int) -> Image.Image:
     Decodes image for encrypted stencil.
     """
 
-    img = Image.open(img_path).convert("RGBA")
+    img = Image.open(img_path).convert("RGB")
 
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
 
