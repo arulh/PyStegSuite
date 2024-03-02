@@ -6,7 +6,7 @@ import pytest
 import random
 import encoder
 # import stegimage.decoder
-from helper import generate_key, encode_pixel, is_encoded_pixel, make_text_img
+import helper as h
 
 def test_encode_stencil_exceptions() -> None:
     """
@@ -55,7 +55,7 @@ def test_helper_make_text_img() -> None:
     text_size = 50
     fnt = ImageFont.load_default(text_size)
 
-    text_im1 = make_text_img(fnt, "Hello World", text_size)
+    text_im1 = h.make_text_img(fnt, "Hello World", text_size)
 
     length, height = text_im1.getbbox()[2]-text_im1.getbbox()[0], text_im1.getbbox()[3]-text_im1.getbbox()[1]
 
@@ -64,14 +64,25 @@ def test_helper_make_text_img() -> None:
 
 def test_helper_encode_pixel() -> None:
     """
-    Tests all functions contained in helper.py
+    Testing encryption and decryption functions.
     """
 
     test_count = 5000
 
     for x in range(test_count):
-        test_key = generate_key()
+        test_key = h.generate_key()
         pixel = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255), 255)
-        new_pixel = encode_pixel(pixel, test_key)
+        new_pixel = h.encode_pixel(pixel, test_key)
 
-        assert is_encoded_pixel(new_pixel, test_key)
+        assert h.is_encoded_pixel(new_pixel, test_key)
+
+def test_helper_str2bin() -> None:
+    """
+    Testing string to binary conversion.
+    """
+
+    assert h.str2bin("h") == [0, 1, 1, 0, 1, 0, 0, 0]
+    assert h.str2bin("x") == [0, 1, 1, 1, 1, 0, 0, 0]
+    assert h.str2bin("V") == [0, 1, 0, 1, 0, 1, 1, 0]
+    assert h.str2bin("hxV") == [0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0]
+    assert h.str2bin(" ") == [0, 0, 1, 0, 0, 0, 0, 0]

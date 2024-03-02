@@ -62,3 +62,15 @@ def generate_key() -> int:
     Generates 4 digit key.
     """
     return random.randint(1000, 9999)
+
+def str2bin(text: str) -> list:
+    """
+    Converts each letter in a string to binary using ASCII encoding.
+    """
+
+    res = []
+
+    for c in list(text):
+        res += list(format(ord(c), 'b').zfill(8))
+
+    return list(map(lambda x: int(x), res))
