@@ -3,3 +3,6 @@ __pycache__/
 
 # ignore virtual environment folder
 pss_env
+
+# ignore vscode settings
+.vscode
