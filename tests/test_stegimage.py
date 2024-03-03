@@ -5,7 +5,6 @@ from PIL import ImageFont
 import pytest
 import random
 import encoder
-# import stegimage.decoder
 import helper as h
 
 def test_encode_stencil_exceptions() -> None:
@@ -86,3 +85,24 @@ def test_helper_str2bin() -> None:
     assert h.str2bin("V") == [0, 1, 0, 1, 0, 1, 1, 0]
     assert h.str2bin("hxV") == [0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0]
     assert h.str2bin(" ") == [0, 0, 1, 0, 0, 0, 0, 0]
+
+def test_helper_encode_lsb() -> None:
+    """
+    Testing proper encryption.
+    """
+
+    p1 = (10, 234, 54)
+    p1e = h.encode_lsb(p1, 1)
+    assert p1[1]+1 == p1e[1]
+
+    p2 = (211, 67, 255)
+    p2e = h.encode_lsb(p2, 0)
+    assert p2[1]-1 == p2e[1]
+
+    p3 = (199, 3, 189)
+    p3e = h.encode_lsb(p3, 1)
+    assert p3[1] == p3e[1]
+
+    p4 = (67, 126, 0)
+    p4e = h.encode_lsb(p4, 0)
+    assert p4[1] == p4e[1]

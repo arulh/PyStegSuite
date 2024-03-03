@@ -44,7 +44,7 @@ def is_encoded_pixel(pixel: tuple, key: int) -> bool:
 
     return binary_key[0:2] == r_bin and binary_key[2:4] == g_bin and binary_key[4:6] == b_bin
 
-def make_text_img(fnt : ImageFont.ImageFont, text: str, text_size: int) -> Image.Image:
+def make_text_img(fnt: ImageFont.ImageFont, text: str, text_size: int) -> Image.Image:
     """
     Generates image of text with the exact dimensions required by given font.
     """
@@ -74,3 +74,15 @@ def str2bin(text: str) -> list:
         res += list(format(ord(c), 'b').zfill(8))
 
     return list(map(lambda x: int(x), res))
+
+def encode_lsb(pixel: tuple,  bit: int) -> tuple:
+    """
+    Replaces LSB of pixel's green channel with bit.
+    """
+
+    if (pixel[1] & 0b1 == bit):
+        return pixel
+    elif (pixel[1] & 0b1 == 1):
+        return (pixel[0], pixel[1]-1, pixel[2])
+    else:
+        return (pixel[0], pixel[1]+1, pixel[2])
