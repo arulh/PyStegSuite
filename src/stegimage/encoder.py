@@ -1,13 +1,44 @@
 from PIL import Image, ImageFont
 
-from helper import encode_pixel, generate_key, make_text_img
+from helper import encode_pixel, generate_key, make_text_img, str2bin, encode_lsb
+
+def encode_text(img_path: str, encoded_text: str) -> tuple | ValueError:
+    """
+    Encodes the text into the image.
+
+    Returns:
+        encoded image (Image.Image), key (int)
+    """
+
+    img = Image.open(img_path).convert("RGB")
+    length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+    num_pixels = length * height
+
+    if (len(encoded_text)*8 > num_pixels):
+        raise ValueError("TEXT DOES NOT FIT IN IMAGE")
+    
+    bin_encodings = str2bin(encoded_text)
+
+    curr = (0, 0)
+    for b in bin_encodings:
+        if (curr[0] == length):
+            curr[0] = 0
+            curr[1] = 1
+
+        p = img.getpixel(curr)
+        img.putpixel(curr, encode_lsb(p, b))
+
+        curr = (curr[0]+1, curr[1])
+
+    return img, len(encoded_text)
+
 
 def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
     """
     Encodes the text into the image as a stencil.
 
     Returns:
-        Image object, key
+        encoded image (Image.Image), key (int)
     """
     
     img = Image.open(img_path).convert("RGB")
@@ -21,6 +52,7 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(
     elif (encoded_text.isspace()):
         raise ValueError("ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER")
     
+    # generate stencil
     text_img = make_text_img(fnt, encoded_text, text_size)
 
     key = generate_key()
@@ -32,8 +64,3 @@ def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(
                 img.putpixel(adjusted_coords, encode_pixel(img.getpixel(adjusted_coords), key))
 
     return img, key
-
-def encode_image() -> tuple | ValueError:
-    """
-    
-    """
