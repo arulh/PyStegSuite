@@ -86,6 +86,17 @@ def test_helper_str2bin() -> None:
     assert h.str2bin("hxV") == [0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0]
     assert h.str2bin(" ") == [0, 0, 1, 0, 0, 0, 0, 0]
 
+def test_helper_bin2str() -> None:
+    """
+    Testing binary to string conversion.
+    """
+
+    l1 = [0, 1, 1, 0, 1, 0, 0, 0]
+    assert h.bin2str(l1) == "h"
+
+    l2 = [0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0]
+    assert h.bin2str(l2) == "hxV"
+
 def test_helper_encode_lsb() -> None:
     """
     Testing proper encryption.

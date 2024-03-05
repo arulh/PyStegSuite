@@ -75,6 +75,26 @@ def str2bin(text: str) -> list:
 
     return list(map(lambda x: int(x), res))
 
+def bin2str(bin_lst: list) -> str:
+    """
+    """
+
+    counter = 0
+    byte = ""
+    res = ""
+
+    for b in bin_lst:
+        byte += str(b)
+        counter += 1
+
+        if (counter == 8):
+            print(byte)
+            res += chr(int(byte, 2))
+            byte = ""
+            counter = 0
+        
+    return res
+
 def encode_lsb(pixel: tuple,  bit: int) -> tuple:
     """
     Replaces LSB of pixel's green channel with bit.
