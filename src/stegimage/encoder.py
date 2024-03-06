@@ -32,7 +32,6 @@ def encode_text(img_path: str, encoded_text: str) -> tuple | ValueError:
 
     return img, len(encoded_text)
 
-
 def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
     """
     Encodes the text into the image as a stencil.

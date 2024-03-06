@@ -88,7 +88,6 @@ def bin2str(bin_lst: list) -> str:
         counter += 1
 
         if (counter == 8):
-            print(byte)
             res += chr(int(byte, 2))
             byte = ""
             counter = 0
@@ -106,3 +105,10 @@ def encode_lsb(pixel: tuple,  bit: int) -> tuple:
         return (pixel[0], pixel[1]-1, pixel[2])
     else:
         return (pixel[0], pixel[1]+1, pixel[2])
+    
+def get_encrypted_bit(pixel: tuple) -> int:
+    """
+    Returns LSB from encoded pixel.
+    """
+
+    return pixel[1] & 0b00000001
