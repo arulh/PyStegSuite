@@ -111,4 +111,4 @@ def get_encrypted_bit(pixel: tuple) -> int:
     Returns LSB from encoded pixel.
     """
 
-    return pixel[1] & 0b00000001
+    return pixel[1] & 0b1

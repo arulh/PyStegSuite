@@ -21,7 +21,7 @@ def decode_text(img_path: str, key: int) -> str:
         curr = (curr[0]+1, curr[1])
 
         if (curr[0] == length):
-            curr = (curr[0], curr[1]+1)
+            curr = (0, curr[1]+1)
 
     return bin2str(lsb_list)
 

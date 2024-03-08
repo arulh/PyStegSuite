@@ -22,8 +22,7 @@ def encode_text(img_path: str, encoded_text: str) -> tuple | ValueError:
     curr = (0, 0)
     for b in bin_encodings:
         if (curr[0] == length):
-            curr[0] = 0
-            curr[1] = 1
+            curr = (0, curr[1]+1)
 
         p = img.getpixel(curr)
         img.putpixel(curr, encode_lsb(p, b))
