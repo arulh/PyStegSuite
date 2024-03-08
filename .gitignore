@@ -6,3 +6,6 @@ pss_env
 
 # ignore vscode settings
 .vscode
+
+# ignore test resources
+resources
