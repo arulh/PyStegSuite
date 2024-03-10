@@ -1,11 +1,52 @@
 import sys
 sys.path.append('../src/stegimage')
 
-from PIL import ImageFont
+from PIL import ImageFont, Image
 import pytest
 import random
-import encoder
+import encoder as enc
+import decoder as dec
 import helper as h
+
+def test_encode_text() -> None:
+    """
+    Testing encode_text() functionality.
+    """
+
+    text = "Hello World"
+    im, key = enc.encode_text("resources/image.png", text)
+    im.save("resources/encoded_image.png")
+    decoded_text = dec.decode_text("resources/encoded_image.png", key)
+
+    assert text == decoded_text
+
+    with open('resources/encoded_text.txt', 'r') as file:
+        text = file.read().replace('\n', '') # text is 3191 characters long
+
+    im, key = enc.encode_text("resources/image.png", text)
+    im.save("resources/encoded_image.png")
+    decoded_text = dec.decode_text("resources/encoded_image.png", key)
+
+    assert text == decoded_text
+
+def test_encode_text_exceptions() -> None:
+    """
+    Tests the exception for encode_text.
+    """
+
+    with open('resources/encoded_text.txt', 'r') as file:
+        text = file.read().replace('\n', '')
+        text1 = text[:312]
+        text2 = text[:313]
+
+    try:
+        im, key = enc.encode_text("resources/small_image.png", text1) # small_image.png is 50x50 pixels
+    except:
+        pytest.fail("UNEXPECTED ERROR")
+    
+    with pytest.raises(ValueError) as execinfo:
+        im, key = enc.encode_text("resources/small_image.png", text2)
+    assert str(execinfo.value) == "TEXT DOES NOT FIT IN IMAGE"
 
 def test_encode_stencil_exceptions() -> None:
     """
@@ -16,35 +57,35 @@ def test_encode_stencil_exceptions() -> None:
     fnt = ImageFont.load_default(text_size)
     text = "Hello"
     text_length = int(fnt.getlength(text))
-    rel_path = "resources/beach.png" # beach.png is 1024x1024 pixels
+    rel_path = "resources/image.png" # image.png is 1024x1024 pixels
 
     # testing text_size
     try:
-        encoder.encode_stencil(rel_path, text, text_size=text_size, text_coords=(0, 1024-text_size))
+        enc.encode_stencil(rel_path, text, text_size=text_size, text_coords=(0, 1024-text_size))
     except:
         pytest.fail("UNEXPECTED ERROR")
 
     with pytest.raises(ValueError) as execinfo:
-        encoder.encode_stencil(rel_path, text, text_size=1025-text_size)
+        enc.encode_stencil(rel_path, text, text_size=1025-text_size)
     assert str(execinfo.value) == "TEXT DOES NOT FIT ON IMAGE"
 
     # testing text_length
     try:
-        encoder.encode_stencil(rel_path, text, text_size=text_size, text_coords=(1024-text_length, 0))
+        enc.encode_stencil(rel_path, text, text_size=text_size, text_coords=(1024-text_length, 0))
     except:
         pytest.fail("UNEXPECTED ERROR")
 
     with pytest.raises(ValueError) as execinfo:
-        encoder.encode_stencil(rel_path, text, text_size=text_size,  text_coords=(1025-text_length, 0))
+        enc.encode_stencil(rel_path, text, text_size=text_size,  text_coords=(1025-text_length, 0))
     assert str(execinfo.value) == "TEXT DOES NOT FIT ON IMAGE"
 
     # test invalid string
     with pytest.raises(ValueError) as execinfo:
-        encoder.encode_stencil(rel_path, "   ")
+        enc.encode_stencil(rel_path, "   ")
     assert str(execinfo.value) == "ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER"
 
     with pytest.raises(ValueError) as execinfo:
-        encoder.encode_stencil(rel_path, "\t\n")
+        enc.encode_stencil(rel_path, "\t\n")
     assert str(execinfo.value) == "ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER"
 
 def test_helper_make_text_img() -> None:

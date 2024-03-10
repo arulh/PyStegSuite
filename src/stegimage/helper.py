@@ -77,6 +77,7 @@ def str2bin(text: str) -> list:
 
 def bin2str(bin_lst: list) -> str:
     """
+    Converts binary list to string using ASCII encoding.
     """
 
     counter = 0
