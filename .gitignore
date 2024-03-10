@@ -7,5 +7,5 @@ pss_env
 # ignore vscode settings
 .vscode
 
-# ignore test resources
-resources
+# ignore test encoded image
+encoded_image.png
