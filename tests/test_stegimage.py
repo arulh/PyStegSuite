@@ -14,18 +14,18 @@ def test_encode_text() -> None:
     """
 
     text = "Hello World"
-    im, key = enc.encode_text("resources/image.png", text)
+    im, key = enc.encode_text(text, img_path="resources/image.png")
     im.save("resources/encoded_image.png")
-    decoded_text = dec.decode_text("resources/encoded_image.png", key)
+    decoded_text = dec.decode_text(key, img_path="resources/encoded_image.png")
 
     assert text == decoded_text
 
     with open('resources/encoded_text.txt', 'r') as file:
         text = file.read().replace('\n', '') # text is 3191 characters long
 
-    im, key = enc.encode_text("resources/image.png", text)
-    im.save("resources/encoded_image.png")
-    decoded_text = dec.decode_text("resources/encoded_image.png", key)
+    image = Image.open("resources/image.png")
+    im, key = enc.encode_text(text, img=image)
+    decoded_text = dec.decode_text(key, img=im)
 
     assert text == decoded_text
 
@@ -40,12 +40,12 @@ def test_encode_text_exceptions() -> None:
         text2 = text[:313]
 
     try:
-        im, key = enc.encode_text("resources/small_image.png", text1) # small_image.png is 50x50 pixels
+        im, key = enc.encode_text(text1, img_path="resources/small_image.png") # small_image.png is 50x50 pixels
     except:
         pytest.fail("UNEXPECTED ERROR")
     
     with pytest.raises(ValueError) as execinfo:
-        im, key = enc.encode_text("resources/small_image.png", text2)
+        im, key = enc.encode_text(text2, img_path="resources/small_image.png")
     assert str(execinfo.value) == "TEXT DOES NOT FIT IN IMAGE"
 
 def test_encode_stencil_exceptions() -> None:

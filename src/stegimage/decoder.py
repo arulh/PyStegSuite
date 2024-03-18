@@ -3,12 +3,21 @@ from PIL import Image
 
 from helper import is_encoded_pixel, get_encrypted_bit, bin2str
 
-def decode_text(img_path: str, key: int) -> str:
+def decode_text(key: int, img_path: str=None, img: Image.Image=None) -> str:
     """
     Decodes image for encrypted text.
     """
 
-    img = Image.open(img_path).convert("RGB")
+    # checks if atleast one image argument is provided
+    if (img_path == None and img == None):
+        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+    
+    if (img_path != None and img == None):
+        img = Image.open(img_path).convert("RGB")
+    else:
+        # default to using img argument
+        img = img.convert("RGB")
+
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
     curr = (0, 0)
 

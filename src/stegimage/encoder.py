@@ -2,7 +2,7 @@ from PIL import Image, ImageFont
 
 from helper import encode_pixel, generate_key, make_text_img, str2bin, encode_lsb
 
-def encode_text(img_path: str, encoded_text: str) -> tuple | ValueError:
+def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) -> tuple | ValueError:
     """
     Encodes the text into the image.
 
@@ -10,13 +10,24 @@ def encode_text(img_path: str, encoded_text: str) -> tuple | ValueError:
         encoded image (Image.Image), key (int)
     """
 
-    img = Image.open(img_path).convert("RGB")
+    # checks if atleast one image argument is provided
+    if (img_path == None and img == None):
+        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+    
+    if (img_path != None and img == None):
+        img = Image.open(img_path).convert("RGB")
+    else:
+        # default to using img argument
+        img = img.convert("RGB")
+
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
     num_pixels = length * height
 
+    # checks if encoded_text can fit in the provided image
     if (len(encoded_text)*8 > num_pixels):
         raise ValueError("TEXT DOES NOT FIT IN IMAGE")
     
+    # generate binary version of encoded_text
     bin_encodings = str2bin(encoded_text)
 
     curr = (0, 0)
