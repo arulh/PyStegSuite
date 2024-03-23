@@ -42,15 +42,24 @@ def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) ->
 
     return img, len(encoded_text)
 
-def encode_stencil(img_path: str, encoded_text: str, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
+def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
     """
     Encodes the text into the image as a stencil.
 
     Returns:
         encoded image (Image.Image), key (int)
     """
+
+    # checks if atleast one image argument is provided
+    if (img_path == None and img == None):
+        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
     
-    img = Image.open(img_path).convert("RGB")
+    if (img_path != None and img == None):
+        img = Image.open(img_path).convert("RGB")
+    else:
+        # default to using img argument
+        img = img.convert("RGB")
+    
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
     fnt = ImageFont.load_default(text_size)
     text_length = int(fnt.getlength(encoded_text))

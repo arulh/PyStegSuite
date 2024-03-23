@@ -34,12 +34,19 @@ def decode_text(key: int, img_path: str=None, img: Image.Image=None) -> str:
 
     return bin2str(lsb_list)
 
-def decode_stencil(img_path: str, key: int) -> Image.Image:
+def decode_stencil(key: int, img_path: str=None, img: Image.Image=None) -> Image.Image:
     """
     Decodes image for encrypted stencil.
     """
 
-    img = Image.open(img_path).convert("RGB")
+    if (img_path == None and img == None):
+        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+    
+    if (img_path != None and img == None):
+        img = Image.open(img_path).convert("RGB")
+    else:
+        # default to using img argument
+        img = img.convert("RGB")
 
     length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
 
