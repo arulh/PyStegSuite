@@ -21,7 +21,7 @@ encoded_im, key = enc.encode_stencil("hello world", img=im, text_size=50, text_c
 ### Decode image
 
 ```python
-decoded_im = dec.decode_stencil(key, img=encoded_img)
+decoded_im = dec.decode_stencil(key, img=encoded_im)
 ```
 
 ![dec_img](https://github.com/arulh/PyStegSuite/assets/104797653/8c51a67e-6810-469d-bb65-98dfbafa9cfe)
