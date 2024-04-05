@@ -6,11 +6,29 @@ def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) ->
     """
     Encodes the text into the image.
 
-    Returns:
-        encoded image (Image.Image), key (int)
-    """
+    Args:
+        encoded_text (str): The text to be encoded into the image.
+        img_path (str, optional): The path to the image file. Defaults to None.
+        img (Image.Image, optional): The image object. Defaults to None.
 
-    # checks if atleast one image argument is provided
+    Returns:
+        tuple | ValueError: A tuple containing the encoded image (Image.Image) and the length of the encoded text (int).
+
+    Raises:
+        ValueError: If neither img_path nor img is provided.
+        ValueError: If the text does not fit in the image.
+
+    Note:
+        - At least one image argument (img_path or img) must be provided.
+        - The image should be in RGB format.
+        - The encoded text should fit within the image. If the length of the encoded text multiplied by 8 is greater than the number of pixels in the image, a ValueError is raised.
+        - The function uses the least significant bit (LSB) technique to encode the text into the image pixels.
+
+    Example:
+        encoded_image, text_length = encode_text("Hello, world!", img_path="image.png")
+    """
+    
+    # checks if at least one image argument is provided
     if (img_path == None and img == None):
         raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
     
@@ -46,11 +64,23 @@ def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, 
     """
     Encodes the text into the image as a stencil.
 
+    Args:
+        encoded_text (str): The text to be encoded into the image.
+        img_path (str, optional): The path to the image file. Defaults to None.
+        img (Image.Image, optional): The image object. Defaults to None.
+        text_size (int, optional): The size of the text in pixels. Defaults to 50.
+        text_coords (tuple, optional): The coordinates (x, y) where the top-left corner of the text will be placed on the image. Defaults to (0, 0).
+
     Returns:
-        encoded image (Image.Image), key (int)
+        tuple | ValueError: A tuple containing the encoded image (Image.Image) and the key (int) used for encoding.
+
+    Raises:
+        ValueError: If neither img_path nor img argument is provided.
+        ValueError: If the text does not fit on the image.
+        ValueError: If the encoded text does not contain at least one character.
     """
 
-    # checks if atleast one image argument is provided
+    # checks if at least one image argument is provided
     if (img_path == None and img == None):
         raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
     
