@@ -1,8 +1,13 @@
 [project]
-name = "example_package_YOUR_USERNAME_HERE"
+name = "stegimage"
 version = "0.0.1"
 authors = [
-  { name="Example Author", email="author@example.com" },
+  { name="Arul H", email="arulh@metrized.com" },
+]
+dependencies=[
+  "pillow",
+  "numpy",
+  "pandas"
 ]
 description = "A small example package"
 readme = "README.md"
@@ -12,7 +17,3 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
