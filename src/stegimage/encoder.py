@@ -2,83 +2,95 @@ from PIL import Image, ImageFont
 from typing import Union, Tuple
 from .helper import encode_pixel, generate_key, make_text_img, str2bin, encode_lsb
 
-def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) -> Tuple:
-    """
-    Encodes the text into the image.
+class Encoder:
 
-    Returns:
-        encoded image (Image.Image), key (int)
-    """
+    def __init__(self, type: str, encoded_text: str, img: Image.Image) -> None:
+        if (type == "text"):
+            self.type = "text"
+            im, key = self._encode_text(encoded_text=encoded_text, img=img)
+        else:
+            self.type = "stencil"
+            im, key = self._encode_stencil(encoded_text=encoded_text, img=img)
 
-    # checks if atleast one image argument is provided
-    if (img_path == None and img == None):
-        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
-    
-    if (img_path != None and img == None):
-        img = Image.open(img_path).convert("RGB")
-    else:
-        # default to using img argument
-        img = img.convert("RGB")
+        return im, key
 
-    length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
-    num_pixels = length * height
+    def _encode_text(self, encoded_text: str, img_path: str=None, img: Image.Image=None) -> Tuple:
+        """
+        Encodes the text into the image.
 
-    # checks if encoded_text can fit in the provided image
-    if (len(encoded_text)*8 > num_pixels):
-        raise ValueError("TEXT DOES NOT FIT IN IMAGE")
-    
-    # generate binary version of encoded_text
-    bin_encodings = str2bin(encoded_text)
+        Returns:
+            encoded image (Image.Image), key (int)
+        """
 
-    curr = (0, 0)
-    for b in bin_encodings:
-        if (curr[0] == length):
-            curr = (0, curr[1]+1)
+        # checks if atleast one image argument is provided
+        if (img_path == None and img == None):
+            raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+        
+        if (img_path != None and img == None):
+            img = Image.open(img_path).convert("RGB")
+        else:
+            # default to using img argument
+            img = img.convert("RGB")
 
-        p = img.getpixel(curr)
-        img.putpixel(curr, encode_lsb(p, b))
+        length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+        num_pixels = length * height
 
-        curr = (curr[0]+1, curr[1])
+        # checks if encoded_text can fit in the provided image
+        if (len(encoded_text)*8 > num_pixels):
+            raise ValueError("TEXT DOES NOT FIT IN IMAGE")
+        
+        # generate binary version of encoded_text
+        bin_encodings = str2bin(encoded_text)
 
-    return img, len(encoded_text)
+        curr = (0, 0)
+        for b in bin_encodings:
+            if (curr[0] == length):
+                curr = (0, curr[1]+1)
 
-def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> Tuple:
-    """
-    Encodes the text into the image as a stencil.
+            p = img.getpixel(curr)
+            img.putpixel(curr, encode_lsb(p, b))
 
-    Returns:
-        encoded image (Image.Image), key (int)
-    """
+            curr = (curr[0]+1, curr[1])
 
-    # checks if atleast one image argument is provided
-    if (img_path == None and img == None):
-        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
-    
-    if (img_path != None and img == None):
-        img = Image.open(img_path).convert("RGB")
-    else:
-        # default to using img argument
-        img = img.convert("RGB")
-    
-    length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
-    fnt = ImageFont.load_default(text_size)
-    text_length = int(fnt.getlength(encoded_text))
+        return img, len(encoded_text)
 
-    # check valid arguments
-    if (text_length+text_coords[0] > length or text_size+text_coords[1] > height):
-        raise ValueError("TEXT DOES NOT FIT ON IMAGE")
-    elif (encoded_text.isspace()):
-        raise ValueError("ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER")
-    
-    # generate stencil
-    text_img = make_text_img(fnt, encoded_text, text_size)
+    def _encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> Tuple:
+        """
+        Encodes the text into the image as a stencil.
 
-    key = generate_key()
+        Returns:
+            encoded image (Image.Image), key (int)
+        """
 
-    for y in range(text_size):
-        for x in range(text_length):
-            if (text_img.getpixel((x, y)) == (0, 255, 0)):
-                adjusted_coords = (x+text_coords[0], y+text_coords[1])
-                img.putpixel(adjusted_coords, encode_pixel(img.getpixel(adjusted_coords), key))
+        # checks if atleast one image argument is provided
+        if (img_path == None and img == None):
+            raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+        
+        if (img_path != None and img == None):
+            img = Image.open(img_path).convert("RGB")
+        else:
+            # default to using img argument
+            img = img.convert("RGB")
+        
+        length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+        fnt = ImageFont.load_default(text_size)
+        text_length = int(fnt.getlength(encoded_text))
 
-    return img, key
+        # check valid arguments
+        if (text_length+text_coords[0] > length or text_size+text_coords[1] > height):
+            raise ValueError("TEXT DOES NOT FIT ON IMAGE")
+        elif (encoded_text.isspace()):
+            raise ValueError("ENCODED TEXT MUST CONTAIN AT LEAST ONE CHARACTER")
+        
+        # generate stencil
+        text_img = make_text_img(fnt, encoded_text, text_size)
+
+        key = generate_key()
+
+        for y in range(text_size):
+            for x in range(text_length):
+                if (text_img.getpixel((x, y)) == (0, 255, 0)):
+                    adjusted_coords = (x+text_coords[0], y+text_coords[1])
+                    img.putpixel(adjusted_coords, encode_pixel(img.getpixel(adjusted_coords), key))
+
+        return img, key

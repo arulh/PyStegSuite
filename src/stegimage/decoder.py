@@ -1,59 +1,70 @@
 import numpy as np
 from PIL import Image
+from .encoder import Encoder
 
 from .helper import is_encoded_pixel, get_encrypted_bit, bin2str
 
-def decode_text(key: int, img_path: str=None, img: Image.Image=None) -> str:
-    """
-    Decodes image for encrypted text.
-    """
+class Decoder:
 
-    # checks if atleast one image argument is provided
-    if (img_path == None and img == None):
-        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
-    
-    if (img_path != None and img == None):
-        img = Image.open(img_path).convert("RGB")
-    else:
-        # default to using img argument
-        img = img.convert("RGB")
+    def __init__(self, type: str, img: Image.Image, key: int) -> None:
+        if (type == "text"):
+            res = self._decode_text(key, img=img)
+            print(res)
+        else:
+            res = self._decode_stencil(key, img=img)
+            res.show()
 
-    length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
-    curr = (0, 0)
+    def _decode_text(key: int, img_path: str=None, img: Image.Image=None) -> str:
+        """
+        Decodes image for encrypted text.
+        """
 
-    lsb_list = []
+        # checks if atleast one image argument is provided
+        if (img_path == None and img == None):
+            raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+        
+        if (img_path != None and img == None):
+            img = Image.open(img_path).convert("RGB")
+        else:
+            # default to using img argument
+            img = img.convert("RGB")
 
-    for x in range(key*8):
-        pxl = img.getpixel(curr)
-        lsb_list += [get_encrypted_bit(pxl)]
+        length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+        curr = (0, 0)
 
-        curr = (curr[0]+1, curr[1])
+        lsb_list = []
 
-        if (curr[0] == length):
-            curr = (0, curr[1]+1)
+        for x in range(key*8):
+            pxl = img.getpixel(curr)
+            lsb_list += [get_encrypted_bit(pxl)]
 
-    return bin2str(lsb_list)
+            curr = (curr[0]+1, curr[1])
 
-def decode_stencil(key: int, img_path: str=None, img: Image.Image=None) -> Image.Image:
-    """
-    Decodes image for encrypted stencil.
-    """
+            if (curr[0] == length):
+                curr = (0, curr[1]+1)
 
-    if (img_path == None and img == None):
-        raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
-    
-    if (img_path != None and img == None):
-        img = Image.open(img_path).convert("RGB")
-    else:
-        # default to using img argument
-        img = img.convert("RGB")
+        return bin2str(lsb_list)
 
-    length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+    def _decode_stencil(key: int, img_path: str=None, img: Image.Image=None) -> Image.Image:
+        """
+        Decodes image for encrypted stencil.
+        """
 
-    for y in range(height):
-        for x in range(length):
-            if (is_encoded_pixel(img.getpixel((x, y)), key)):
-                # sets decrypted pixels to green
-                img.putpixel((x, y), (0, 255, 0))
+        if (img_path == None and img == None):
+            raise ValueError("MUST PROVIDE IMAGE ARGUMENT")
+        
+        if (img_path != None and img == None):
+            img = Image.open(img_path).convert("RGB")
+        else:
+            # default to using img argument
+            img = img.convert("RGB")
 
-    return img
+        length, height = img.getbbox()[2]-img.getbbox()[0], img.getbbox()[3]-img.getbbox()[1]
+
+        for y in range(height):
+            for x in range(length):
+                if (is_encoded_pixel(img.getpixel((x, y)), key)):
+                    # sets decrypted pixels to green
+                    img.putpixel((x, y), (0, 255, 0))
+
+        return img
