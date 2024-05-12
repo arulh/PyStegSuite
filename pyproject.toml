@@ -1,26 +1,6 @@
-# [project]
-# name = "stegimage"
-# version = "0.0.1"
-# authors = [
-#   { name="Arul H", email="arulh@metrized.com" },
-# ]
-# dependencies=[
-#   "pillow",
-#   "numpy",
-#   "pandas"
-# ]
-# description = "A small example package"
-# readme = "README.md"
-# requires-python = ">=3.8"
-# classifiers = [
-#     "Programming Language :: Python :: 3",
-#     "License :: OSI Approved :: MIT License",
-#     "Operating System :: OS Independent",
-# ]
-
 [project]
 name = "stegimage"
-description = "Give a brief description"
+description = "Steganography for images"
 authors = [{ name = "Arul Howard", email = "arulh@metrized.com" }]
 requires-python = ">=3.7"
 dynamic = ["version", "readme"]
@@ -30,9 +10,8 @@ dependencies = ["pillow", "numpy", "pandas"]
 dev = ["pip-tools", "pytest"] # Developer tools
 
 [tool.setuptools.dynamic]
-version = { attr = "package.__version__" }
+version = { attr = "stegimage.__version__" }
 readme = { file = ["README.md"] }
-
 
 [build-system]
 requires = ["setuptools", "setuptools-scm"]
