@@ -1,8 +1,8 @@
 from PIL import Image, ImageFont
+from typing import Union, Tuple
+from .helper import encode_pixel, generate_key, make_text_img, str2bin, encode_lsb
 
-from helper import encode_pixel, generate_key, make_text_img, str2bin, encode_lsb
-
-def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) -> tuple | ValueError:
+def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) -> Tuple:
     """
     Encodes the text into the image.
 
@@ -42,7 +42,7 @@ def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) ->
 
     return img, len(encoded_text)
 
-def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
+def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> Tuple:
     """
     Encodes the text into the image as a stencil.
 
