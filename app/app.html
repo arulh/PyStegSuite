@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image Form</title>
+</head>
+<body>
+    <h2>Encode image</h2>
+    <form action="http://0.0.0.0:8888/encode/" method="post" enctype="multipart/form-data">
+        <label for="string">Enter String:</label><br>
+        <input type="text" id="string" name="string"><br><br>
+        <label for="image">Choose Image:</label><br>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <br><br>
+    <h2>Decode image</h2>
+    <form action="http://0.0.0.0:8888/decode/" method="post" enctype="multipart/form-data">
+        <label for="string">Enter key:</label><br>
+        <input type="text" id="key" name="key"><br><br>
+        <label for="image">Choose Image:</label><br>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
