@@ -11,6 +11,10 @@ app = FastAPI()
 dir = os.path.dirname(__file__)
 app.mount("/static", StaticFiles(directory=dir), name="static")
 
+@app.get("/")
+async def home():
+    return "app is running"
+
 @app.post("/encode/", response_class=HTMLResponse)
 async def encode_image(string: str= Form(), image: UploadFile = File()):
     # Processing the image
