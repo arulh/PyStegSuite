@@ -2,13 +2,13 @@ import gradio as gr
 from stegimage import encoder, decoder
 
 def encode_interface(image, message):
-    # im = Image.fromarray(image)
+    print("encoding image")
     eim, key = encoder.encode_stencil(message, img=image)
 
     return eim, key
 
 def decode_interface(image, key):
-    # im = Image.fromarray(image)
+    print("decoding image")
     dim = decoder.decode_stencil(key, img=image)
 
     return dim
