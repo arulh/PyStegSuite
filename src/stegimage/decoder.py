@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 
-from helper import is_encoded_pixel, get_encrypted_bit, bin2str
+from .helper import is_encoded_pixel, get_encrypted_bit, bin2str
 
 def decode_text(key: int, img_path: str=None, img: Image.Image=None) -> str:
     """
