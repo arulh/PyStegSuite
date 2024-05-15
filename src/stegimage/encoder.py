@@ -62,7 +62,7 @@ def encode_text(encoded_text: str, img_path: str=None, img: Image.Image=None) ->
 
 def encode_stencil(encoded_text: str,img_path: str=None, img: Image.Image=None, text_size=50, text_coords=(0, 0)) -> tuple | ValueError:
     """
-    Encodes the text into the image as a stencil.
+    Encodes the text into the image as a stencil (symmetric cipher).
 
     Args:
         encoded_text (str): The text to be encoded into the image.
