@@ -2,7 +2,7 @@
 
 ## Demo
 
-
+https://github.com/arulh/ImageEncoder/assets/104797653/016a0234-7aed-4942-9266-e3f41131ebcb
 
 ## Installation
 
