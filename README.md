@@ -1,6 +1,12 @@
 # PyStegSuite
 
-Feel free to fork this repo and contribute. All contributions are greatly apreciated!
+## Demo
+
+
+
+## Installation
+
+`pip install git+https://github.com/arulh/PyStegSuite.git`
 
 ### Original image
 
@@ -10,18 +16,17 @@ Feel free to fork this repo and contribute. All contributions are greatly apreci
 
 ``` python
 from PIL import Image
-import encoder as enc
-import decoder as dec
+from stegimage import encode_stencil, decode_stencil
 
-im = Image.open("resources/image.png")
-encoded_im, key = enc.encode_stencil("hello world", img=im, text_size=50, text_coords=(50, 50))
+im = Image.open("./resources/image.png")
+encoded_im, key = encode_stencil("hello world", img=im, text_size=50, text_coords=(50, 50))
 ```
 ![output](https://github.com/arulh/PyStegSuite/assets/104797653/96b052dc-1154-4393-8f7f-afbd7e8d180e)
 
 ### Decode image
 
 ```python
-decoded_im = dec.decode_stencil(key, img=encoded_im)
+decoded_im = decode_stencil(key, img=encoded_im)
 ```
 
 ![dec_img](https://github.com/arulh/PyStegSuite/assets/104797653/8c51a67e-6810-469d-bb65-98dfbafa9cfe)
